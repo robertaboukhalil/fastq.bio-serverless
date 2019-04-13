@@ -8,25 +8,33 @@ addEventListener('fetch', event => {
  */
 async function handleRequest(request)
 {
-  const { fastq_metrics } = wasm_bindgen;
-  await wasm_bindgen(wasm)
-
   // Expecting a POST request
   if(request.method != "POST") {
     return new Response(`Error: expecting a POST request, not a '${request.method}' request`);
   }
 
+  const { fastq_metrics } = wasm_bindgen;
+  await wasm_bindgen(wasm)
+
   // Fetch metrics
   try {
     const postData = await request.formData();
-    const fastq = postData.get('sequence');
-    const stats = fastq_metrics(fastq);
+    const stats = fastq_metrics(postData.get('sequence'));
 
-    return new Response(stats, {status: 200})
+    return new Response(stats, {
+      status: 200,
+      // Support CORS (https://developers.cloudflare.com/workers/recipes/cors-preflight-requests/)
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "HEAD, POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+      }
+    })
   } catch (err) {
-    return new Response('could not unbundle post data')
+    return new Response('Error: could not generate metrics')
   }
 }
+
 
 // Content-Type: application/x-www-form-urlencoded
 // Body:
@@ -42,25 +50,3 @@ async function handleRequest(request)
 // TTACCTCATGAGTTTCCCTTATCTNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
 // +
 // AA-FFJJ<AJAAFJJJJJJJFJAF###############################################################################################################################
-
-
-
-// const body = `sequence=@ST-E00118:53:H02GVALXX:1:1101:12520:1695 1:N:0:0
-// CAAATAAATTTTGTGGACACGTAGCCCTTTTGAGTTAACACAAAACCTTCATCAGTTTTCTTGTCAAGAAAACTAAAACCTATATTATTAATATCAAGCNATTAAAATNTCNNCTTAAAGGNATCACTTTTGAATTTTAAATATTCTTCAA
-// +
-// AAAFFJJJJAJJJJJJJFJJJJAJJJFFJJJJJJJJJJJJJAFJJFJJJAJJJJJJ<FJJJJJJJJJJJJJJJJJJJJJFJJJFJFFJJJJJJJJJJJF#FJJJJJFA#JF##-FA---FJ#7-JJFFFJJJFAFFFF<FFFJJA-FF7-7
-// @ST-E00118:53:H02GVALXX:1:1101:12540:1695 1:N:0:0
-// TTCATTTTAAAGATTTATTTAAAAGTTGAATTTAAAAGTTTATTTTGTCTTTACAACCACTTATACTGTAATTAATTGTGTTTTAGCATAGCAGATCAGNTTAGGATTNAANNAGGAAACCNCAAATATTAGGTTAGGATATTCAGACATT
-// +
-// AAFFFJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJAAAAJAJA-JAJFFA#7FJJFJF<#F<##<FFAAF--#-7FJJ-<-JFA-FJJJJJJJJ-FJFFFJJ`
-// const data = {
-//   method: "POST",
-//   headers: {
-//     "Content-Type": "application/x-www-form-urlencoded",
-//     "Accept": "*/*"
-//   },
-//   "body": body
-// };
-// fetch("https://serverless.bio/test", data)
-//   .then(d => d.text())
-//   .then(d => console.log(d))
