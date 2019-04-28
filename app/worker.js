@@ -1,4 +1,4 @@
-var API_URL = "https://serverless.bio/test";
+var API_URL = "http://API-GOES-HERE";  // your serverless function URL goes here
 var CHUNK_SIZE = 200e3;
 
 // Process messages sent to this worker
@@ -14,7 +14,7 @@ self.onmessage = msg =>
     var chunks = [...Array(nbChunks).keys()];
 
     // Fetch metrics for several chunks
-    for(var i = 0; i < 10; i++)
+    for(var i = 0; i < 20; i++)
     {
         try {
             // Choose a chunk at random and remove it from array
@@ -37,17 +37,12 @@ self.onmessage = msg =>
             // Parse metrics and send back info to main thread
             console.log(`[${chunkID}] Processing chunk...`);
             getMetrics(chunk.join("\n"), chunkID);
-            // var metrics = getMetrics(chunk.join("\n"));
-            // self.postMessage(metrics);
         } catch (error) {
             console.log(`[${chunkID}] Error parsing chunk: ${error}`);
             self.postMessage(null);
             continue;
         }
     }
-
-    // console.log("Closing WebWorker");
-    // self.close();
 };
 
 // Return metrics
@@ -65,5 +60,4 @@ function getMetrics(fastq, id)
 
     console.log(`[${id}] Sending...`);
     request.send(`sequence=${encodeURIComponent(fastq)}`);
-    // request.response;
 }

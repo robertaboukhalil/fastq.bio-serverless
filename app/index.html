@@ -38,11 +38,6 @@
             </div>
             <span class="spinner" style="display:none"></span>
             <div class="mx-auto order-0">
-                <div style="float:left" class="loadingfile navbar-brand mx-auto">
-                    <a id="btnPause" href="#" class="button btn btn-primary btn-sm" role="button" style="display:none"><span class="fa fa-pause"></span></a>
-                    &nbsp;
-                    <span></span>   
-                </div>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -69,11 +64,11 @@
                 <button id="btnNewFile" class="btn btn-lg btn-primary" role="button">Choose FASTQ File</button>
                 <input id="upload" type="file" style="display:none">
                 <br><br>
-                <p class="lead" style="color:#999"><a id="btnSample" href="#">Use Example FASTQ (NA12878)</a></p>
+                <!-- <p class="lead" style="color:#999"><a id="btnSample" href="#">Use Example FASTQ (NA12878)</a></p> -->
             </div>
             <div class="containerPreview" style="display:none; height:100vh">
                 <div class="progress" style="height: 10px; border-radius:0">
-                    <div class="progress-bar progress-bar-animated progress-bar-striped" role="progressbar" style="width: 0%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar progress-bar-animated progress-bar-striped" role="progressbar" style="width: 10%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
 
                 <div class="row">
@@ -144,12 +139,12 @@ function launch(file)
         progressUpdate();
         if(msg.data == null)
             return;
-    
+
         console.log(`[Main thread] Got metrics for ${msg.data.n} reads`);
         setTimeout(() => {
             mergeStats(msg.data);
             plotStats();
-        }, 500);
+        }, 300);
     };
 
     // Send File object to worker
