@@ -5,6 +5,11 @@
 
 See [this repo](https://github.com/robertaboukhalil/fastq.bio) for the version of fastq.bio that runs WebAssembly in the browser.
 
+## Deploy
+
+- To use it in your own workers, modify the `API_URL` variable in [worker.js](https://github.com/robertaboukhalil/fastq.bio-serverless/blob/master/app/worker.js#L1) to point to your own serverless function.
+- Use the [Cloudflare wrangler](https://github.com/cloudflare/wrangler) tool to compile to WebAssembly and deploy to the cloud
+
 ## Architecture
 
 - User provides a File from their local filesystem
