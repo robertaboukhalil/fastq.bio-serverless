@@ -19,4 +19,4 @@ See [this repo](https://github.com/robertaboukhalil/fastq.bio) for the version o
 - Data analysis runs in Cloudflare Workers (code compiled from Rust --> WebAssembly)
 
 ## Details
-An article with more details is coming soon
+Check out my [Smashing Magazine article on serverless WebAssembly](https://www.smashingmagazine.com/2019/08/beyond-browser-serverless-webassembly/).
